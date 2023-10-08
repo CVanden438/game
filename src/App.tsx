@@ -101,9 +101,8 @@ const Enemy = ({ initialX, initialY, x, y }) => {
 };
 
 export const MyComponent = () => {
-  const [x, setX] = useState(100);
-  const [y, setY] = useState(100);
-  const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [playerX, setPlayerX] = useState(100);
+  const [playerY, setPlayerY] = useState(100);
   const [mousePos, setMousePos] = useState({});
   const [bullets, setBullets] = useState([]);
   const [enemies, setEnemies] = useState([
@@ -112,7 +111,10 @@ export const MyComponent = () => {
     { initialX: 300, initialY: 300 },
   ]);
   const handleShoot = (e) => {
-    setBullets([...bullets, { x, y, mousePos, id: crypto.randomUUID() }]);
+    setBullets([
+      ...bullets,
+      { x: playerX, y: playerY, mousePos, id: crypto.randomUUID() },
+    ]);
     return;
   };
 
@@ -145,7 +147,7 @@ export const MyComponent = () => {
         //ZOOM
         // scale={{ x: 2, y: 2 }}
         //CENTRE ON PLAYER
-        pivot={{ x: x, y: y }}
+        pivot={{ x: playerX, y: playerY }}
       >
         <Sprite
           image={
@@ -154,15 +156,15 @@ export const MyComponent = () => {
           width={700}
           height={700}
         />
-        <Bunny x={x} y={y} setX={setX} setY={setY} />
+        <Bunny x={playerX} y={playerY} setX={setPlayerX} setY={setPlayerY} />
         {enemies.map((enemy, index) => {
           return (
             <Enemy
               initialX={enemy.initialX}
               initialY={enemy.initialY}
               key={index}
-              x={x}
-              y={y}
+              x={playerX}
+              y={playerY}
             />
           );
         })}
