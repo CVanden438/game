@@ -11,6 +11,7 @@ import { Color } from 'pixi.js';
 import { useEffect, useState, useCallback } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
+import { useBulletStore } from './state/Bullet.ts';
 
 const keys = { w: false, a: false, s: false, d: false };
 
@@ -93,7 +94,7 @@ const Bunny = ({ x, setX, y, setY }) => {
   );
 };
 
-const Bullet = ({ x, y, mousePos, setBullets, bullets, id, index }) => {
+const Bullet = ({ x, y, mousePos, removeBullet, bullets, id, index }) => {
   const [bulletX, setBulletX] = useState(x);
   const [bulletY, setBulletY] = useState(y);
   const [angle, setAngle] = useState(0);
@@ -115,14 +116,16 @@ const Bullet = ({ x, y, mousePos, setBullets, bullets, id, index }) => {
     if (bulletX > 0 && bulletX < MAP_SIZE) {
       setBulletX(bulletX + v_initial_x);
     } else {
-      const newArray = bullets.splice(index, 1);
-      setBullets([...bullets]);
+      // const newArray = bullets.splice(index, 1);
+      // setBullets([...bullets]);
+      removeBullet(id);
     }
     if (bulletY > 0 && bulletY < MAP_SIZE) {
       setBulletY(bulletY + v_initial_y);
     } else {
-      const newArray = bullets.splice(index, 1);
-      setBullets([...bullets]);
+      // const newArray = bullets.splice(index, 1);
+      // setBullets([...bullets]);
+      removeBullet(id);
     }
     if (normalized_direction_x > 0) {
       setAngle(Math.atan(normalized_direction_y / normalized_direction_x));
@@ -201,15 +204,18 @@ export const MyComponent = () => {
   const playerY = usePlayerStore((state) => state.playerY);
   const enemyList = useEnemyStore((state) => state.enemyList);
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
+  const bulletList = useBulletStore((state) => state.bulletList);
+  const fireBullet = useBulletStore((state) => state.fireBullet);
+  const removeBullet = useBulletStore((state) => state.removeBullet);
   const [mousePos, setMousePos] = useState({});
-  const [bullets, setBullets] = useState([]);
-  const handleShoot = (e) => {
-    setBullets([
-      ...bullets,
-      { x: playerX, y: playerY, mousePos, id: crypto.randomUUID() },
-    ]);
-    return;
-  };
+  // const [bullets, setBullets] = useState([]);
+  // const handleShoot = (e) => {
+  //   setBullets([
+  //     ...bullets,
+  //     { x: playerX, y: playerY, mousePos, id: crypto.randomUUID() },
+  //   ]);
+  //   return;
+  // };
 
   const handleMouseMove = (e) => {
     setMousePos({ x: e.clientX, y: e.clientY });
@@ -236,7 +242,7 @@ export const MyComponent = () => {
         // backgroundAlpha: 0.5,
         background: 'black',
       }}
-      onClick={handleShoot}
+      onClick={() => fireBullet(playerX, playerY, mousePos)}
     >
       <Container
         x={CAMERA_SIZE / 2}
@@ -270,16 +276,16 @@ export const MyComponent = () => {
             );
           })}
         {/* <Enemy initialX={} y={y} /> */}
-        {bullets &&
-          bullets.map((bullet, index) => {
+        {bulletList &&
+          bulletList.map((bullet, index) => {
             return (
               <Bullet
                 x={bullet.x}
                 y={bullet.y}
                 mousePos={bullet.mousePos}
-                setBullets={setBullets}
+                removeBullet={removeBullet}
                 id={bullet.id}
-                bullets={bullets}
+                bullets={bulletList}
                 index={index}
                 // key={crypto.randomUUID()}
                 key={bullet.id}
@@ -287,12 +293,6 @@ export const MyComponent = () => {
             );
           })}
         {/* <Bullet x={x} y={y} mousePos={mousePos} /> */}
-        <Text
-          text={enemyList ? enemyList.length : 'NONE'}
-          anchor={0.5}
-          x={150}
-          y={150}
-        />
       </Container>
     </Stage>
   );
