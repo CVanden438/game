@@ -5,10 +5,12 @@ import {
   Container,
   TilingSprite,
   Graphics,
+  Text,
 } from '@pixi/react';
 import { Color } from 'pixi.js';
-import { useEffect, memo, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { usePlayerStore } from './state/Player.ts';
+import { useEnemyStore } from './state/Enemy.ts';
 
 const keys = { w: false, a: false, s: false, d: false };
 
@@ -156,9 +158,13 @@ const HealthBar = () => {
   return <Graphics draw={draw} />;
 };
 
-const Enemy = ({ initialX, initialY, x, y }) => {
-  const [enemyX, setEnemyX] = useState(initialX);
-  const [enemyY, setEnemyY] = useState(initialY);
+const Enemy = ({ enemyX, enemyY, x, y, id }) => {
+  // const [enemyX, setEnemyX] = useState(initialX);
+  // const [enemyY, setEnemyY] = useState(initialY);
+  const moveEnemyUp = useEnemyStore((state) => state.moveEnemyUp);
+  const moveEnemyDown = useEnemyStore((state) => state.moveEnemyDown);
+  const moveEnemyLeft = useEnemyStore((state) => state.moveEnemyLeft);
+  const moveEnemyRight = useEnemyStore((state) => state.moveEnemyRight);
   const [health, setHealth] = useState(0.5);
   const draw = useCallback((g) => {
     g.clear();
@@ -170,10 +176,10 @@ const Enemy = ({ initialX, initialY, x, y }) => {
     g.drawRect(-50, 50, health * 100, 20);
   }, []);
   useTick(() => {
-    if (enemyX > x) setEnemyX(enemyX - 1);
-    if (enemyX < x) setEnemyX(enemyX + 1);
-    if (enemyY > y) setEnemyY(enemyY - 1);
-    if (enemyY < y) setEnemyY(enemyY + 1);
+    if (enemyX > x + 100) moveEnemyLeft(id);
+    if (enemyX < x - 100) moveEnemyRight(id);
+    if (enemyY > y + 100) moveEnemyUp(id);
+    if (enemyY < y - 100) moveEnemyDown(id);
   });
   return (
     <>
@@ -193,15 +199,10 @@ const Enemy = ({ initialX, initialY, x, y }) => {
 export const MyComponent = () => {
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
-  // const [playerX, setPlayerX] = useState(100);
-  // const [playerY, setPlayerY] = useState(100);
+  const enemyList = useEnemyStore((state) => state.enemyList);
+  const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
   const [mousePos, setMousePos] = useState({});
   const [bullets, setBullets] = useState([]);
-  const [enemies, setEnemies] = useState([
-    { initialX: 100, initialY: 100 },
-    { initialX: 200, initialY: 200 },
-    { initialX: 300, initialY: 300 },
-  ]);
   const handleShoot = (e) => {
     setBullets([
       ...bullets,
@@ -222,6 +223,10 @@ export const MyComponent = () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('mousemove', handleMouseMove);
     };
+  }, []);
+  useEffect(() => {
+    const spawn = setInterval(spawnEnemy, 1000);
+    return () => clearInterval(spawn);
   }, []);
   return (
     <Stage
@@ -251,17 +256,19 @@ export const MyComponent = () => {
         /> */}
         <TilingSprite image={'/space.jpg'} height={MAP_SIZE} width={MAP_SIZE} />
         <Bunny x={playerX} y={playerY} />
-        {enemies.map((enemy, index) => {
-          return (
-            <Enemy
-              initialX={enemy.initialX}
-              initialY={enemy.initialY}
-              key={index}
-              x={playerX}
-              y={playerY}
-            />
-          );
-        })}
+        {enemyList &&
+          enemyList.map((enemy, index) => {
+            return (
+              <Enemy
+                enemyX={enemy.x}
+                enemyY={enemy.y}
+                key={enemy.id}
+                id={enemy.id}
+                x={playerX}
+                y={playerY}
+              />
+            );
+          })}
         {/* <Enemy initialX={} y={y} /> */}
         {bullets &&
           bullets.map((bullet, index) => {
@@ -280,6 +287,12 @@ export const MyComponent = () => {
             );
           })}
         {/* <Bullet x={x} y={y} mousePos={mousePos} /> */}
+        <Text
+          text={enemyList ? enemyList.length : 'NONE'}
+          anchor={0.5}
+          x={150}
+          y={150}
+        />
       </Container>
     </Stage>
   );
