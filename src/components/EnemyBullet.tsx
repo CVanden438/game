@@ -3,7 +3,13 @@ import { useState } from 'react';
 import { usePlayerStore } from '../state/Player';
 import { MAP_SIZE } from '../Constants';
 
-const calcEnemyCollision = ({ bulletX, bulletY, playerX, playerY }) => {
+const calcEnemyCollision = ({
+  bulletX,
+  bulletY,
+  playerX,
+  playerY,
+  damagePlayer,
+}) => {
   let collision = false;
   if (
     bulletX > playerX - 20 &&
@@ -12,7 +18,7 @@ const calcEnemyCollision = ({ bulletX, bulletY, playerX, playerY }) => {
     bulletY < playerY + 20
   ) {
     collision = true;
-    // damageEnemy(i.id);
+    damagePlayer();
   }
   return collision;
 };
@@ -32,8 +38,11 @@ const EnemyBullet = ({
   const [angle, setAngle] = useState(0);
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
+  const damagePlayer = usePlayerStore((state) => state.damagePlayer);
   const moveBullet = () => {
-    if (calcEnemyCollision({ bulletX, bulletY, playerX, playerY })) {
+    if (
+      calcEnemyCollision({ bulletX, bulletY, playerX, playerY, damagePlayer })
+    ) {
       removeBullet({ id, enemyBullets, setEnemyBullets });
       return;
     }

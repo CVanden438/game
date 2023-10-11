@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { CAMERA_SIZE, BULLET_SPEED, MAP_SIZE } from '../Constants';
 import { useEnemyStore } from '../state/Enemy';
 
-const calcCollision = (enemyList, bulletX, bulletY, damageEnemy) => {
+const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
   let collision = false;
   for (const i of enemyList) {
     if (
@@ -14,6 +14,7 @@ const calcCollision = (enemyList, bulletX, bulletY, damageEnemy) => {
     ) {
       collision = true;
       damageEnemy(i.id);
+      killEnemy();
     }
   }
   return collision;
@@ -36,8 +37,9 @@ const Bullet = ({
   const [angle, setAngle] = useState(0);
   const enemyList = useEnemyStore((state) => state.enemyList);
   const damageEnemy = useEnemyStore((state) => state.damageEnemy);
+  const killEnemy = useEnemyStore((state) => state.killEnemy);
   const moveBullet = () => {
-    if (calcCollision(enemyList, bulletX, bulletY, damageEnemy)) {
+    if (calcCollision(enemyList, bulletX, bulletY, damageEnemy, killEnemy)) {
       removeBullet({ id, bullets, setBullets });
       return;
     }

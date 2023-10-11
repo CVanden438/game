@@ -1,4 +1,4 @@
-import { Stage, Container, TilingSprite } from '@pixi/react';
+import { Stage, Container, TilingSprite, Graphics } from '@pixi/react';
 import { useEffect, useState } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
@@ -64,6 +64,7 @@ export const MyComponent = () => {
   const playerY = usePlayerStore((state) => state.playerY);
   const enemyList = useEnemyStore((state) => state.enemyList);
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
+  const health = usePlayerStore((state) => state.health);
   // const bulletList = useBulletStore((state) => state.bulletList);
   // const fireBullet = useBulletStore((state) => state.fireBullet);
   // const removeBullet = useBulletStore((state) => state.removeBullet);
@@ -88,59 +89,66 @@ export const MyComponent = () => {
     return () => clearInterval(spawn);
   }, []);
   return (
-    <Stage
-      width={CAMERA_SIZE}
-      height={CAMERA_SIZE}
-      options={{
-        background: 'black',
-      }}
-      onClick={() =>
-        fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
-      }
-    >
-      <Container
-        x={CAMERA_SIZE / 2}
-        y={CAMERA_SIZE / 2}
-        //ZOOM
-        // scale={{ x: 2, y: 2 }}
-        //CENTRE ON PLAYER
-        pivot={{ x: playerX, y: playerY }}
+    <>
+      <Stage
+        width={CAMERA_SIZE}
+        height={CAMERA_SIZE}
+        options={{
+          background: 'black',
+        }}
+        onClick={() =>
+          fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
+        }
       >
-        <TilingSprite image={'/space.jpg'} height={MAP_SIZE} width={MAP_SIZE} />
-        <Player x={playerX} y={playerY} />
-        {enemyList &&
-          enemyList.map((enemy, index) => {
-            return (
-              <Enemy
-                enemyX={enemy.x}
-                enemyY={enemy.y}
-                key={enemy.id}
-                id={enemy.id}
-                x={playerX}
-                y={playerY}
-                health={enemy.health}
-              />
-            );
-          })}
-        {bullets &&
-          bullets.map((bullet, index) => {
-            return (
-              <Bullet
-                x={bullet.x}
-                y={bullet.y}
-                mousePos={bullet.mousePos}
-                removeBullet={removeBullet}
-                id={bullet.id}
-                bullets={bullets}
-                index={index}
-                key={bullet.id}
-                setBullets={setBullets}
-                velocityX={bullet.velocityX}
-                velocityY={bullet.velocityY}
-              />
-            );
-          })}
-      </Container>
-    </Stage>
+        <Container
+          x={CAMERA_SIZE / 2}
+          y={CAMERA_SIZE / 2}
+          //ZOOM
+          // scale={{ x: 2, y: 2 }}
+          //CENTRE ON PLAYER
+          pivot={{ x: playerX, y: playerY }}
+        >
+          <TilingSprite
+            image={'/space.jpg'}
+            height={MAP_SIZE}
+            width={MAP_SIZE}
+          />
+          <Player x={playerX} y={playerY} />
+          {enemyList &&
+            enemyList.map((enemy, index) => {
+              return (
+                <Enemy
+                  enemyX={enemy.x}
+                  enemyY={enemy.y}
+                  key={enemy.id}
+                  id={enemy.id}
+                  x={playerX}
+                  y={playerY}
+                  health={enemy.health}
+                />
+              );
+            })}
+          {bullets &&
+            bullets.map((bullet, index) => {
+              return (
+                <Bullet
+                  x={bullet.x}
+                  y={bullet.y}
+                  mousePos={bullet.mousePos}
+                  removeBullet={removeBullet}
+                  id={bullet.id}
+                  bullets={bullets}
+                  index={index}
+                  key={bullet.id}
+                  setBullets={setBullets}
+                  velocityX={bullet.velocityX}
+                  velocityY={bullet.velocityY}
+                />
+              );
+            })}
+        </Container>
+      </Stage>
+      <div className=''>{health > 0 ? health : 'dead'}</div>
+    </>
   );
 };

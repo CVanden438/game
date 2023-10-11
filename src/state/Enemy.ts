@@ -52,4 +52,9 @@ export const useEnemyStore = create((set) => ({
       ),
     }));
   },
+  killEnemy: () => {
+    set((state) => ({
+      enemyList: state.enemyList.filter((enemy) => enemy.health > 0.1),
+    }));
+  },
 }));
