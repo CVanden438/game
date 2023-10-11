@@ -7,6 +7,8 @@ import Bullet from './components/Bullet.tsx';
 import Player from './components/Player.tsx';
 import Enemy from './components/Enemy.tsx';
 import { CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
+import EnemyBullet from './components/EnemyBullet.tsx';
+import { useEnemyBulletStore } from './state/EnemyBullet.ts';
 
 export const keys = { w: false, a: false, s: false, d: false };
 
@@ -26,6 +28,7 @@ export const MyComponent = () => {
   const bulletList = useBulletStore((state) => state.bulletList);
   const fireBullet = useBulletStore((state) => state.fireBullet);
   const removeBullet = useBulletStore((state) => state.removeBullet);
+  const enemyBulletList = useEnemyBulletStore((state) => state.enemyBulletList);
   const [mousePos, setMousePos] = useState({});
 
   const handleMouseMove = (e) => {
@@ -45,7 +48,6 @@ export const MyComponent = () => {
     const spawn = setInterval(spawnEnemy, 1000);
     return () => clearInterval(spawn);
   }, []);
-  enemyList && console.log(enemyList);
   return (
     <Stage
       width={CAMERA_SIZE}
@@ -93,6 +95,18 @@ export const MyComponent = () => {
                 key={bullet.id}
                 velocityX={bullet.velocityX}
                 velocityY={bullet.velocityY}
+              />
+            );
+          })}
+        {enemyBulletList &&
+          enemyBulletList.map((enemyBullet, index) => {
+            return (
+              <EnemyBullet
+                x={enemyBullet.x}
+                y={enemyBullet.y}
+                velocityX={enemyBullet.velocityX}
+                velocityY={enemyBullet.velocityY}
+                key={enemyBullet.id}
               />
             );
           })}

@@ -1,24 +1,26 @@
 import { Graphics, Sprite, useTick } from '@pixi/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useEnemyStore } from '../state/Enemy';
+import { useEnemyBulletStore } from '../state/EnemyBullet';
+import { usePlayerStore } from '../state/Player';
 
 const Enemy = ({ enemyX, enemyY, x, y, id, health }) => {
-  // const [enemyX, setEnemyX] = useState(initialX);
-  // const [enemyY, setEnemyY] = useState(initialY);
   const moveEnemyUp = useEnemyStore((state) => state.moveEnemyUp);
   const moveEnemyDown = useEnemyStore((state) => state.moveEnemyDown);
   const moveEnemyLeft = useEnemyStore((state) => state.moveEnemyLeft);
   const moveEnemyRight = useEnemyStore((state) => state.moveEnemyRight);
-  //   const [health, setHealth] = useState(0.5);
+  const fireEnemyBullet = useEnemyBulletStore((state) => state.fireBullet);
+  const playerX = usePlayerStore((state) => state.playerX);
+  const playerY = usePlayerStore((state) => state.playerY);
   const draw = useCallback(
     (g) => {
       g.clear();
       g.lineStyle(2, 0xffffff, 1);
       g.beginFill(0xff0000, 1);
-      g.drawRect(-50, 50, 100, 20);
+      g.drawRect(-50, 50, 100, 10);
       g.lineStyle(0, 0xfffff, 1);
       g.beginFill(0x00ff00, 1);
-      g.drawRect(-50, 50, health * 100, 20);
+      g.drawRect(-50, 50, health * 100, 10);
     },
     [health]
   );
@@ -28,6 +30,15 @@ const Enemy = ({ enemyX, enemyY, x, y, id, health }) => {
     if (enemyY > y + 100) moveEnemyUp(id);
     if (enemyY < y - 100) moveEnemyDown(id);
   });
+  //   const test = () => {
+  //     fireEnemyBullet({ enemyX, enemyY, playerX, playerY });
+  //   };
+  //   useEffect(() => {
+  //     const fire = setInterval(() => {
+  //       fireEnemyBullet({ enemyX, enemyY, playerX, playerY });
+  //     }, 1000);
+  //     return () => clearInterval(fire);
+  //   }, []);
   return (
     <>
       <Sprite

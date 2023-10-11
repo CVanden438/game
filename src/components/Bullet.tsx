@@ -63,7 +63,7 @@ const Bullet = ({
   });
   return (
     <Sprite
-      image={'/01.png'}
+      image={'/13.png'}
       x={bulletX}
       y={bulletY}
       height={40}
