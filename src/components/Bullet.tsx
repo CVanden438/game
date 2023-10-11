@@ -29,6 +29,7 @@ const Bullet = ({
   index,
   velocityX,
   velocityY,
+  setBullets,
 }) => {
   const [bulletX, setBulletX] = useState(x);
   const [bulletY, setBulletY] = useState(y);
@@ -37,15 +38,15 @@ const Bullet = ({
   const damageEnemy = useEnemyStore((state) => state.damageEnemy);
   const moveBullet = () => {
     if (calcCollision(enemyList, bulletX, bulletY, damageEnemy)) {
-      removeBullet(id);
+      removeBullet({ id, bullets, setBullets });
       return;
     }
     if (bulletX < 0 || bulletX > MAP_SIZE) {
-      removeBullet(id);
+      removeBullet({ id, bullets, setBullets });
       return;
     }
     if (bulletY < 0 || bulletY > MAP_SIZE) {
-      removeBullet(id);
+      removeBullet({ id, bullets, setBullets });
       return;
     }
     setBulletX(bulletX + velocityX);

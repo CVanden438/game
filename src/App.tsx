@@ -6,7 +6,7 @@ import { useBulletStore } from './state/Bullet.ts';
 import Bullet from './components/Bullet.tsx';
 import Player from './components/Player.tsx';
 import Enemy from './components/Enemy.tsx';
-import { CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
+import { BULLET_SPEED, CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
 import EnemyBullet from './components/EnemyBullet.tsx';
 import { useEnemyBulletStore } from './state/EnemyBullet.ts';
 
@@ -20,17 +20,56 @@ const handleKeyUp = (e) => {
   keys[e.key] = false;
 };
 
+const calcTraj = (mousePos) => {
+  // Calculate the direction vector
+  const directionX = mousePos.x - CAMERA_SIZE / 2;
+  const directionY = mousePos.y - CAMERA_SIZE / 2;
+
+  // Normalize the direction vector
+  const magnitude = Math.sqrt(
+    directionX * directionX + directionY * directionY
+  );
+  const normalizedDirectionX = directionX / magnitude;
+  const normalizedDirectionY = directionY / magnitude;
+
+  // Calculate the initial velocity components with constant speed
+  const velocityX = BULLET_SPEED * normalizedDirectionX;
+  const velocityY = BULLET_SPEED * normalizedDirectionY;
+  return { velocityX, velocityY };
+};
+
+const fireBullet = ({ playerX, playerY, mousePos, bullets, setBullets }) => {
+  setBullets([
+    ...bullets,
+    {
+      x: playerX,
+      y: playerY,
+      id: crypto.randomUUID(),
+      mousePos,
+      velocityX: calcTraj(mousePos).velocityX,
+      velocityY: calcTraj(mousePos).velocityY,
+    },
+  ]);
+};
+
+const removeBullet = ({ id, bullets, setBullets }) => {
+  const newBullets = bullets.filter((bullet) => {
+    return bullet.id !== id;
+  });
+  setBullets(newBullets);
+};
+
 export const MyComponent = () => {
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
   const enemyList = useEnemyStore((state) => state.enemyList);
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
-  const bulletList = useBulletStore((state) => state.bulletList);
-  const fireBullet = useBulletStore((state) => state.fireBullet);
-  const removeBullet = useBulletStore((state) => state.removeBullet);
-  const enemyBulletList = useEnemyBulletStore((state) => state.enemyBulletList);
+  // const bulletList = useBulletStore((state) => state.bulletList);
+  // const fireBullet = useBulletStore((state) => state.fireBullet);
+  // const removeBullet = useBulletStore((state) => state.removeBullet);
+  // const enemyBulletList = useEnemyBulletStore((state) => state.enemyBulletList);
   const [mousePos, setMousePos] = useState({});
-
+  const [bullets, setBullets] = useState([]);
   const handleMouseMove = (e) => {
     setMousePos({ x: e.clientX, y: e.clientY });
   };
@@ -55,7 +94,9 @@ export const MyComponent = () => {
       options={{
         background: 'black',
       }}
-      onClick={() => fireBullet(playerX, playerY, mousePos)}
+      onClick={() =>
+        fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
+      }
     >
       <Container
         x={CAMERA_SIZE / 2}
@@ -81,8 +122,8 @@ export const MyComponent = () => {
               />
             );
           })}
-        {bulletList &&
-          bulletList.map((bullet, index) => {
+        {bullets &&
+          bullets.map((bullet, index) => {
             return (
               <Bullet
                 x={bullet.x}
@@ -90,23 +131,12 @@ export const MyComponent = () => {
                 mousePos={bullet.mousePos}
                 removeBullet={removeBullet}
                 id={bullet.id}
-                bullets={bulletList}
+                bullets={bullets}
                 index={index}
                 key={bullet.id}
+                setBullets={setBullets}
                 velocityX={bullet.velocityX}
                 velocityY={bullet.velocityY}
-              />
-            );
-          })}
-        {enemyBulletList &&
-          enemyBulletList.map((enemyBullet, index) => {
-            return (
-              <EnemyBullet
-                x={enemyBullet.x}
-                y={enemyBullet.y}
-                velocityX={enemyBullet.velocityX}
-                velocityY={enemyBullet.velocityY}
-                key={enemyBullet.id}
               />
             );
           })}
