@@ -9,22 +9,22 @@ export const usePlayerStore = create((set) => ({
   moveDown: () => set((state) => ({ playerY: state.playerY + 3 })),
   moveUpRight: () =>
     set((state) => ({
-      playerX: state.playerX + 3,
-      playerY: state.playerY - 3,
+      playerX: state.playerX + 3 / Math.sqrt(2),
+      playerY: state.playerY - 3 / Math.sqrt(2),
     })),
   moveUpLeft: () =>
     set((state) => ({
-      playerX: state.playerX - 3,
-      playerY: state.playerY - 3,
+      playerX: state.playerX - 3 / Math.sqrt(2),
+      playerY: state.playerY - 3 / Math.sqrt(2),
     })),
   moveDownLeft: () =>
     set((state) => ({
-      playerX: state.playerX - 3,
-      playerY: state.playerY + 3,
+      playerX: state.playerX - 3 / Math.sqrt(2),
+      playerY: state.playerY + 3 / Math.sqrt(2),
     })),
   moveDownRight: () =>
     set((state) => ({
-      playerX: state.playerX + 3,
-      playerY: state.playerY + 3,
+      playerX: state.playerX + 3 / Math.sqrt(2),
+      playerY: state.playerY + 3 / Math.sqrt(2),
     })),
 }));
