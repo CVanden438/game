@@ -79,21 +79,21 @@ const Enemy = ({ enemyX, enemyY, x, y, id, health }) => {
     if (enemyY > y + 100) moveEnemyUp(id);
     if (enemyY < y - 100) moveEnemyDown(id);
   });
-  //   useEffect(() => {
-  //     const fire = setInterval(
-  //       () =>
-  //         fireBullet({
-  //           playerX: playerXRef.current,
-  //           playerY: playerYRef.current,
-  //           enemyX,
-  //           enemyY,
-  //           enemyBullets,
-  //           setEnemyBullets,
-  //         }),
-  //       1000
-  //     );
-  //     return () => clearInterval(fire);
-  //   }, [enemyBullets]);
+  useEffect(() => {
+    const fire = setInterval(
+      () =>
+        fireBullet({
+          playerX: playerXRef.current,
+          playerY: playerYRef.current,
+          enemyX,
+          enemyY,
+          enemyBullets,
+          setEnemyBullets,
+        }),
+      5000
+    );
+    return () => clearInterval(fire);
+  }, [enemyBullets]);
   useEffect(() => {
     playerXRef.current = playerX;
     playerYRef.current = playerY;

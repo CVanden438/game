@@ -1,4 +1,4 @@
-import { Stage, Container, TilingSprite, Graphics } from '@pixi/react';
+import { Stage, Container, TilingSprite, Graphics, Sprite } from '@pixi/react';
 import { useEffect, useState } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
@@ -147,6 +147,24 @@ export const MyComponent = () => {
               );
             })}
         </Container>
+        <Sprite
+          image={'/ProgressBar04.png'}
+          y={685}
+          x={350}
+          height={30}
+          width={700}
+          angle={180}
+          anchor={0.5}
+        />
+        {health > 0 && (
+          <Sprite
+            image={'/ProgressBar02.png'}
+            y={670}
+            x={1}
+            height={30}
+            width={(health / 10) * 700}
+          />
+        )}
       </Stage>
       <div className=''>{health > 0 ? health : 'dead'}</div>
     </>
