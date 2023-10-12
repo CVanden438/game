@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import enemyData from '../EnemyData';
+import { MAP_SIZE } from '../Constants';
 
 export const useEnemyStore = create((set) => ({
   enemyList: [
@@ -7,8 +8,8 @@ export const useEnemyStore = create((set) => ({
     { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
   ],
   spawnEnemy: () => {
-    const x = Math.random() * 5000;
-    const y = Math.random() * 5000;
+    const x = Math.random() * MAP_SIZE;
+    const y = Math.random() * MAP_SIZE;
     const id = crypto.randomUUID();
     set((state) => ({
       enemyList:
