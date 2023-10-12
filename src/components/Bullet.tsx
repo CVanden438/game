@@ -7,10 +7,10 @@ const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
   let collision = false;
   for (const i of enemyList) {
     if (
-      bulletX > i.x - 50 &&
-      bulletX < i.x + 50 &&
-      bulletY > i.y - 50 &&
-      bulletY < i.y + 50
+      bulletX > i.x - i.data.width / 2 &&
+      bulletX < i.x + i.data.width / 2 &&
+      bulletY > i.y - i.data.height / 2 &&
+      bulletY < i.y + i.data.height / 2
     ) {
       collision = true;
       damageEnemy(i.id);

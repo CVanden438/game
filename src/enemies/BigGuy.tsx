@@ -4,7 +4,8 @@ import { useEnemyStore } from '../state/Enemy';
 import { useEnemyBulletStore } from '../state/EnemyBullet';
 import { usePlayerStore } from '../state/Player';
 import { BULLET_SPEED } from '../Constants';
-import EnemyBullet from './EnemyBullet';
+import EnemyBullet from '../components/EnemyBullet';
+import DefaultMovement from '../controllers/movement/DefaultMovement';
 
 const calcEnemyTraj = ({ playerX, playerY, enemyX, enemyY }) => {
   // Calculate the direction vector
@@ -51,12 +52,9 @@ const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
   setEnemyBullets(newBullets);
 };
 
-const Enemy = ({ enemyX, enemyY, x, y, id, data }) => {
-  const { health, name } = data;
-  const moveEnemyUp = useEnemyStore((state) => state.moveEnemyUp);
-  const moveEnemyDown = useEnemyStore((state) => state.moveEnemyDown);
-  const moveEnemyLeft = useEnemyStore((state) => state.moveEnemyLeft);
-  const moveEnemyRight = useEnemyStore((state) => state.moveEnemyRight);
+const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
+  const { health, name, height, width, speed, fireRate, maxHealth } = data;
+  const moveEnemy = useEnemyStore((state) => state.moveEnemy);
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
   const [enemyBullets, setEnemyBullets] = useState([]);
@@ -66,20 +64,21 @@ const Enemy = ({ enemyX, enemyY, x, y, id, data }) => {
       g.clear();
       g.lineStyle(2, 0xffffff, 1);
       g.beginFill(0xff0000, 1);
-      g.drawRect(-50, 50, 100, 10);
+      g.drawRect(-width / 2, width / 2, width, 10);
       g.lineStyle(0, 0xfffff, 1);
       g.beginFill(0x00ff00, 1);
-      g.drawRect(-50, 50, health * 100, 10);
+      g.drawRect(-width / 2, width / 2, (health / maxHealth) * width, 10);
     },
     [health]
   );
   useTick(() => {
-    if (enemyX > x + 100) moveEnemyLeft(id);
-    if (enemyX < x - 100) moveEnemyRight(id);
-    if (enemyY > y + 100) moveEnemyUp(id);
-    if (enemyY < y - 100) moveEnemyDown(id);
+    // if (enemyX > x + 100) moveEnemy({ id, moveX: -1 * speed, moveY: 0 });
+    // if (enemyX < x - 100) moveEnemy({ id, moveX: 1 * speed, moveY: 0 });
+    // if (enemyY > y + 100) moveEnemy({ id, moveX: 0, moveY: -1 * speed });
+    // if (enemyY < y - 100) moveEnemy({ id, moveX: 0, moveY: 1 * speed });
+    DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
-    if (cooldown.current === 500) {
+    if (cooldown.current === fireRate) {
       fireBullet({
         playerX,
         playerY,
@@ -97,8 +96,8 @@ const Enemy = ({ enemyX, enemyY, x, y, id, data }) => {
         image={name === 'bigGuy' ? 'Ship18.png' : 'Ship13.png'}
         x={enemyX}
         y={enemyY}
-        height={100}
-        width={100}
+        height={height}
+        width={width}
         anchor={0.5}
       />
       <Graphics draw={draw} x={enemyX} y={enemyY} />
@@ -122,4 +121,4 @@ const Enemy = ({ enemyX, enemyY, x, y, id, data }) => {
   );
 };
 
-export default Enemy;
+export default BigGuy;

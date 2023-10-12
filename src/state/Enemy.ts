@@ -1,19 +1,27 @@
 import { create } from 'zustand';
+import enemyData from '../EnemyData';
 
 export const useEnemyStore = create((set) => ({
   enemyList: [
-    { x: 100, y: 100, id: 1020, health: 1 },
-    { x: 200, y: 200, id: 2222, health: 1 },
+    { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
+    { x: 200, y: 200, id: 2222, data: enemyData.smallGuy },
   ],
   spawnEnemy: () => {
     const x = Math.random() * 5000;
     const y = Math.random() * 5000;
     const id = crypto.randomUUID();
-    const health = 1;
     set((state) => ({
       enemyList:
         state.enemyList.length < 10
-          ? [...state.enemyList, { x, y, id, health }]
+          ? [
+              ...state.enemyList,
+              {
+                x,
+                y,
+                id,
+                data: enemyData.bigGuy,
+              },
+            ]
           : [...state.enemyList],
     }));
   },
@@ -48,13 +56,30 @@ export const useEnemyStore = create((set) => ({
   damageEnemy: (id) => {
     set((state) => ({
       enemyList: state.enemyList.map((enemy) =>
-        enemy.id === id ? { ...enemy, health: enemy.health - 0.1 } : enemy
+        enemy.id === id
+          ? {
+              ...enemy,
+              data: {
+                ...enemy.data,
+                health: enemy.data.health - 1,
+              },
+            }
+          : enemy
+      ),
+    }));
+  },
+  moveEnemy: ({ id, moveX, moveY }) => {
+    set((state) => ({
+      enemyList: state.enemyList.map((enemy) =>
+        enemy.id === id
+          ? { ...enemy, x: enemy.x + moveX, y: enemy.y + moveY }
+          : enemy
       ),
     }));
   },
   killEnemy: () => {
     set((state) => ({
-      enemyList: state.enemyList.filter((enemy) => enemy.health > 0.1),
+      enemyList: state.enemyList.filter((enemy) => enemy.data.health > 0.1),
     }));
   },
 }));

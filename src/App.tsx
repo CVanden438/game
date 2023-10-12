@@ -9,6 +9,8 @@ import Enemy from './components/Enemy.tsx';
 import { BULLET_SPEED, CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
 import EnemyBullet from './components/EnemyBullet.tsx';
 import { useEnemyBulletStore } from './state/EnemyBullet.ts';
+import BigGuy from './enemies/BigGuy.tsx';
+import EnemyMapper from './enemies/EnemyMapper.tsx';
 
 export const keys = { w: false, a: false, s: false, d: false };
 
@@ -114,20 +116,7 @@ export const MyComponent = () => {
             width={MAP_SIZE}
           />
           <Player x={playerX} y={playerY} />
-          {enemyList &&
-            enemyList.map((enemy, index) => {
-              return (
-                <Enemy
-                  enemyX={enemy.x}
-                  enemyY={enemy.y}
-                  key={enemy.id}
-                  id={enemy.id}
-                  x={playerX}
-                  y={playerY}
-                  health={enemy.health}
-                />
-              );
-            })}
+          <EnemyMapper enemyList={enemyList} />
           {bullets &&
             bullets.map((bullet, index) => {
               return (
