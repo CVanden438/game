@@ -6,6 +6,7 @@ import { usePlayerStore } from '../state/Player';
 import { BULLET_SPEED } from '../Constants';
 import EnemyBullet from '../components/EnemyBullet';
 import DefaultMovement from '../controllers/movement/DefaultMovement';
+import RadialMovement from '../controllers/movement/RadialMovement';
 
 const calcEnemyTraj = ({ playerX, playerY, enemyX, enemyY }) => {
   // Calculate the direction vector
@@ -76,7 +77,8 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     // if (enemyX < x - 100) moveEnemy({ id, moveX: 1 * speed, moveY: 0 });
     // if (enemyY > y + 100) moveEnemy({ id, moveX: 0, moveY: -1 * speed });
     // if (enemyY < y - 100) moveEnemy({ id, moveX: 0, moveY: 1 * speed });
-    DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    // DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    RadialMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
     if (cooldown.current === fireRate) {
       fireBullet({

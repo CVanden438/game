@@ -4,7 +4,7 @@ import enemyData from '../EnemyData';
 export const useEnemyStore = create((set) => ({
   enemyList: [
     { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
-    { x: 200, y: 200, id: 2222, data: enemyData.smallGuy },
+    { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
   ],
   spawnEnemy: () => {
     const x = Math.random() * 5000;
