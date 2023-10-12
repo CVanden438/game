@@ -59,8 +59,7 @@ const Enemy = ({ enemyX, enemyY, x, y, id, health }) => {
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
   const [enemyBullets, setEnemyBullets] = useState([]);
-  const playerXRef = useRef(playerX);
-  const playerYRef = useRef(playerY);
+  const cooldown = useRef(0);
   const draw = useCallback(
     (g) => {
       g.clear();
@@ -78,26 +77,19 @@ const Enemy = ({ enemyX, enemyY, x, y, id, health }) => {
     if (enemyX < x - 100) moveEnemyRight(id);
     if (enemyY > y + 100) moveEnemyUp(id);
     if (enemyY < y - 100) moveEnemyDown(id);
+    cooldown.current = cooldown.current + 1;
+    if (cooldown.current === 500) {
+      fireBullet({
+        playerX,
+        playerY,
+        enemyX,
+        enemyY,
+        enemyBullets,
+        setEnemyBullets,
+      });
+      cooldown.current = 0;
+    }
   });
-  useEffect(() => {
-    const fire = setInterval(
-      () =>
-        fireBullet({
-          playerX: playerXRef.current,
-          playerY: playerYRef.current,
-          enemyX,
-          enemyY,
-          enemyBullets,
-          setEnemyBullets,
-        }),
-      5000
-    );
-    return () => clearInterval(fire);
-  }, [enemyBullets]);
-  useEffect(() => {
-    playerXRef.current = playerX;
-    playerYRef.current = playerY;
-  }, [playerX, playerY]);
   return (
     <>
       <Sprite
