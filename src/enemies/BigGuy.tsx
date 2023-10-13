@@ -77,8 +77,8 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     // if (enemyX < x - 100) moveEnemy({ id, moveX: 1 * speed, moveY: 0 });
     // if (enemyY > y + 100) moveEnemy({ id, moveX: 0, moveY: -1 * speed });
     // if (enemyY < y - 100) moveEnemy({ id, moveX: 0, moveY: 1 * speed });
-    // DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
-    RadialMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    // RadialMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
     if (cooldown.current === fireRate) {
       fireBullet({

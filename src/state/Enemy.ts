@@ -4,13 +4,16 @@ import { MAP_SIZE } from '../Constants';
 
 export const useEnemyStore = create((set) => ({
   enemyList: [
-    { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
-    { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
+    // { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
+    // { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
   ],
   spawnEnemy: () => {
     const x = Math.random() * MAP_SIZE;
     const y = Math.random() * MAP_SIZE;
     const id = crypto.randomUUID();
+    let type = 'bigGuy';
+    const rand = Math.random();
+    rand < 0.5 ? (type = 'bigGuy') : (type = 'smallGuy');
     set((state) => ({
       enemyList:
         state.enemyList.length < 10
@@ -20,7 +23,7 @@ export const useEnemyStore = create((set) => ({
                 x,
                 y,
                 id,
-                data: enemyData.bigGuy,
+                data: enemyData[type],
               },
             ]
           : [...state.enemyList],
