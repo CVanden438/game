@@ -32,6 +32,8 @@ const EnemyBullet = ({
   id,
   enemyBullets,
   setEnemyBullets,
+  projWidth,
+  projHeight,
 }) => {
   const [bulletX, setBulletX] = useState(x);
   const [bulletY, setBulletY] = useState(y);
@@ -70,8 +72,8 @@ const EnemyBullet = ({
       image={'/01.png'}
       x={bulletX}
       y={bulletY}
-      height={40}
-      width={40}
+      height={projWidth}
+      width={projHeight}
       anchor={0.5}
       rotation={angle}
     />

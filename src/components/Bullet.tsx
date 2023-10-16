@@ -69,8 +69,8 @@ const Bullet = ({
       image={'/13.png'}
       x={bulletX}
       y={bulletY}
-      height={40}
-      width={40}
+      height={60}
+      width={60}
       anchor={0.5}
       rotation={angle}
     />

@@ -54,7 +54,17 @@ const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
 };
 
 const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
-  const { health, name, height, width, speed, fireRate, maxHealth } = data;
+  const {
+    health,
+    name,
+    height,
+    width,
+    speed,
+    fireRate,
+    maxHealth,
+    projWidth,
+    projHeight,
+  } = data;
   const moveEnemy = useEnemyStore((state) => state.moveEnemy);
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
@@ -73,12 +83,7 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     [health]
   );
   useTick(() => {
-    // if (enemyX > x + 100) moveEnemy({ id, moveX: -1 * speed, moveY: 0 });
-    // if (enemyX < x - 100) moveEnemy({ id, moveX: 1 * speed, moveY: 0 });
-    // if (enemyY > y + 100) moveEnemy({ id, moveX: 0, moveY: -1 * speed });
-    // if (enemyY < y - 100) moveEnemy({ id, moveX: 0, moveY: 1 * speed });
     DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
-    // RadialMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
     if (cooldown.current === fireRate) {
       fireBullet({
@@ -116,6 +121,8 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
               id={bullet.id}
               enemyBullets={enemyBullets}
               setEnemyBullets={setEnemyBullets}
+              projWidth={projWidth}
+              projHeight={projHeight}
             />
           );
         })}

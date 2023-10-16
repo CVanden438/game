@@ -7,6 +7,8 @@ const enemyData = {
     height: 100,
     width: 100,
     fireRate: 500,
+    projWidth: 80,
+    projHeight: 80,
   },
   smallGuy: {
     name: 'smallGuy',
@@ -16,6 +18,8 @@ const enemyData = {
     height: 50,
     width: 50,
     fireRate: 200,
+    projWidth: 30,
+    projHeight: 50,
   },
 };
 

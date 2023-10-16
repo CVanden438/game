@@ -5,54 +5,47 @@ import { useState } from 'react';
 import { MAP_SIZE } from '../Constants';
 
 const Player = ({ x, setX, y, setY }) => {
-  const moveUp = usePlayerStore((state) => state.moveUp);
-  const moveDown = usePlayerStore((state) => state.moveDown);
-  const moveLeft = usePlayerStore((state) => state.moveLeft);
-  const moveRight = usePlayerStore((state) => state.moveRight);
-  const moveUpLeft = usePlayerStore((state) => state.moveUpLeft);
-  const moveUpRight = usePlayerStore((state) => state.moveUpRight);
-  const moveDownLeft = usePlayerStore((state) => state.moveDownLeft);
-  const moveDownRight = usePlayerStore((state) => state.moveDownRight);
+  const movePlayer = usePlayerStore((state) => state.movePlayer);
   const [angle, setAngle] = useState(0);
   useTick(() => {
     if (keys['w'] && keys['a']) {
       if (y > 0 && x > 0) {
-        moveUpLeft();
+        movePlayer({ moveX: -3 / Math.SQRT2, moveY: -3 / Math.SQRT2 });
         setAngle(315);
       }
     } else if (keys['w'] && keys['d']) {
       if (y > 0 && x < MAP_SIZE) {
-        moveUpRight();
+        movePlayer({ moveX: 3 / Math.SQRT2, moveY: -3 / Math.SQRT2 });
         setAngle(45);
       }
     } else if (keys['s'] && keys['a']) {
       if (y < MAP_SIZE && x > 0) {
-        moveDownLeft();
+        movePlayer({ moveX: -3 / Math.SQRT2, moveY: 3 / Math.SQRT2 });
         setAngle(225);
       }
     } else if (keys['s'] && keys['d']) {
       if (y < MAP_SIZE && x < MAP_SIZE) {
-        moveDownRight();
+        movePlayer({ moveX: 3 / Math.SQRT2, moveY: 3 / Math.SQRT2 });
         setAngle(135);
       }
     } else if (keys['w']) {
       if (y > 0) {
-        moveUp();
+        movePlayer({ moveX: 0, moveY: -3 });
         setAngle(0);
       }
     } else if (keys['a']) {
       if (x > 0) {
-        moveLeft();
+        movePlayer({ moveX: -3, moveY: 0 });
         setAngle(270);
       }
     } else if (keys['s']) {
       if (y < MAP_SIZE) {
-        moveDown();
+        movePlayer({ moveX: 0, moveY: 3 });
         setAngle(180);
       }
     } else if (keys['d']) {
       if (x < MAP_SIZE) {
-        moveRight();
+        movePlayer({ moveX: 3, moveY: 0 });
         setAngle(90);
       }
     }

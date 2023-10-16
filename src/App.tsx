@@ -1,5 +1,12 @@
-import { Stage, Container, TilingSprite, Graphics, Sprite } from '@pixi/react';
-import { useEffect, useState } from 'react';
+import {
+  Stage,
+  Container,
+  TilingSprite,
+  Graphics,
+  Sprite,
+  useTick,
+} from '@pixi/react';
+import { useEffect, useRef, useState } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
 import { useBulletStore } from './state/Bullet.ts';
@@ -11,6 +18,7 @@ import EnemyBullet from './components/EnemyBullet.tsx';
 import { useEnemyBulletStore } from './state/EnemyBullet.ts';
 import BigGuy from './enemies/BigGuy.tsx';
 import EnemyMapper from './enemies/EnemyMapper.tsx';
+import BulletMapper from './components/BulletMapper.tsx';
 
 export const keys = { w: false, a: false, s: false, d: false };
 
@@ -67,10 +75,8 @@ export const MyComponent = () => {
   const enemyList = useEnemyStore((state) => state.enemyList);
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
   const health = usePlayerStore((state) => state.health);
-  // const bulletList = useBulletStore((state) => state.bulletList);
-  // const fireBullet = useBulletStore((state) => state.fireBullet);
-  // const removeBullet = useBulletStore((state) => state.removeBullet);
-  // const enemyBulletList = useEnemyBulletStore((state) => state.enemyBulletList);
+  const playerCooldown = useRef(0);
+  const playerFireRate = useRef(100);
   const [mousePos, setMousePos] = useState({});
   const [bullets, setBullets] = useState([]);
   const handleMouseMove = (e) => {
@@ -90,6 +96,19 @@ export const MyComponent = () => {
     const spawn = setInterval(spawnEnemy, 1000);
     return () => clearInterval(spawn);
   }, []);
+  // useTick(() => {
+  //   playerCooldown.current = playerCooldown.current + 1;
+  //   if (playerCooldown.current === playerFireRate.current) {
+  //     fireBullet({
+  //       playerX,
+  //       playerY,
+  //       mousePos,
+  //       bullets,
+  //       setBullets,
+  //     });
+  //     playerCooldown.current = 0;
+  //   }
+  // });
   return (
     <>
       <Stage
@@ -98,9 +117,9 @@ export const MyComponent = () => {
         options={{
           background: 'black',
         }}
-        onClick={() =>
-          fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
-        }
+        // onClick={() =>
+        //   fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
+        // }
       >
         <Container
           x={CAMERA_SIZE / 2}
@@ -117,7 +136,7 @@ export const MyComponent = () => {
           />
           <Player x={playerX} y={playerY} />
           <EnemyMapper enemyList={enemyList} />
-          {bullets &&
+          {/* {bullets &&
             bullets.map((bullet, index) => {
               return (
                 <Bullet
@@ -134,7 +153,8 @@ export const MyComponent = () => {
                   velocityY={bullet.velocityY}
                 />
               );
-            })}
+            })} */}
+          <BulletMapper mousePos={mousePos} />
         </Container>
         <Sprite
           image={'/ProgressBar04.png'}
@@ -151,11 +171,11 @@ export const MyComponent = () => {
             y={670}
             x={1}
             height={30}
-            width={(health / 10) * 700}
+            width={(health / 100) * 700}
           />
         )}
       </Stage>
-      <div className=''>{health > 0 ? health : 'dead'}</div>
+      {/* <div className=''>{health > 0 ? health : 'dead'}</div> */}
     </>
   );
 };

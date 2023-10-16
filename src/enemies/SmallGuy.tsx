@@ -54,7 +54,17 @@ const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
 };
 
 const SmallGuy = ({ enemyX, enemyY, x, y, id, data }) => {
-  const { health, name, height, width, speed, fireRate, maxHealth } = data;
+  const {
+    health,
+    name,
+    height,
+    width,
+    speed,
+    fireRate,
+    maxHealth,
+    projWidth,
+    projHeight,
+  } = data;
   const moveEnemy = useEnemyStore((state) => state.moveEnemy);
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
@@ -116,6 +126,8 @@ const SmallGuy = ({ enemyX, enemyY, x, y, id, data }) => {
               id={bullet.id}
               enemyBullets={enemyBullets}
               setEnemyBullets={setEnemyBullets}
+              projWidth={projWidth}
+              projHeight={projHeight}
             />
           );
         })}
