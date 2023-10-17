@@ -14,7 +14,7 @@ const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
     ) {
       collision = true;
       damageEnemy(i.id);
-      killEnemy();
+      // killEnemy();
     }
   }
   return collision;

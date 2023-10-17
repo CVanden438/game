@@ -9,6 +9,7 @@ const enemyData = {
     fireRate: 500,
     projWidth: 80,
     projHeight: 80,
+    points: 100,
   },
   smallGuy: {
     name: 'smallGuy',
@@ -20,6 +21,7 @@ const enemyData = {
     fireRate: 200,
     projWidth: 30,
     projHeight: 50,
+    points: 50,
   },
 };
 

@@ -1,0 +1,41 @@
+.mainContainer {
+  display: flex;
+  /* flex-direction: column; */
+}
+
+.sidePanel {
+  /* position: relative; */
+  color: white;
+}
+
+.sidePanel > img {
+  height: 700px;
+  width: 400px;
+}
+
+.sidePanel > h2 {
+  /* position: absolute; */
+  color: white;
+  /* top: 15px; */
+  /* left: 200px; */
+  /* transform: translate(-50%); */
+}
+
+.mainStage {
+  /* border: 2px solid blue; */
+  background-image: url('Panel07.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  /* padding: 20px; */
+  border-radius: 20px;
+  border: 2px solid white;
+}
+
+body {
+  background-color: black;
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+  height: 100vh;
+  overflow: hidden;
+}

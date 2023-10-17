@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import enemyData from '../EnemyData';
 import { MAP_SIZE } from '../Constants';
+import { usePlayerStore } from './Player';
 
-export const useEnemyStore = create((set) => ({
+export const useEnemyStore = create((set, get) => ({
   enemyList: [
     // { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
     // { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
@@ -71,6 +72,10 @@ export const useEnemyStore = create((set) => ({
           : enemy
       ),
     }));
+    const targetEnemy = get().enemyList.filter((enemy) => enemy.id === id);
+    if (targetEnemy[0].data.health === 0) {
+      get().killEnemy({ id, score: targetEnemy[0].data.points });
+    }
   },
   moveEnemy: ({ id, moveX, moveY }) => {
     set((state) => ({
@@ -81,9 +86,10 @@ export const useEnemyStore = create((set) => ({
       ),
     }));
   },
-  killEnemy: () => {
+  killEnemy: ({ id, score }) => {
     set((state) => ({
-      enemyList: state.enemyList.filter((enemy) => enemy.data.health > 0.1),
+      enemyList: state.enemyList.filter((enemy) => enemy.id !== id),
     }));
+    usePlayerStore.getState().addScore(score);
   },
 }));

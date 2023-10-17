@@ -1,24 +1,12 @@
-import {
-  Stage,
-  Container,
-  TilingSprite,
-  Graphics,
-  Sprite,
-  useTick,
-} from '@pixi/react';
+import { Stage, Container, TilingSprite, Sprite } from '@pixi/react';
 import { useEffect, useRef, useState } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
-import { useBulletStore } from './state/Bullet.ts';
-import Bullet from './components/Bullet.tsx';
 import Player from './components/Player.tsx';
-import Enemy from './components/Enemy.tsx';
 import { BULLET_SPEED, CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
-import EnemyBullet from './components/EnemyBullet.tsx';
-import { useEnemyBulletStore } from './state/EnemyBullet.ts';
-import BigGuy from './enemies/BigGuy.tsx';
 import EnemyMapper from './enemies/EnemyMapper.tsx';
 import BulletMapper from './components/BulletMapper.tsx';
+import './App.css';
 
 export const keys = { w: false, a: false, s: false, d: false };
 
@@ -75,6 +63,7 @@ export const MyComponent = () => {
   const enemyList = useEnemyStore((state) => state.enemyList);
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
   const health = usePlayerStore((state) => state.health);
+  const score = usePlayerStore((state) => state.score);
   const playerCooldown = useRef(0);
   const playerFireRate = useRef(100);
   const [mousePos, setMousePos] = useState({});
@@ -110,7 +99,7 @@ export const MyComponent = () => {
   //   }
   // });
   return (
-    <>
+    <main className='mainContainer'>
       <Stage
         width={CAMERA_SIZE}
         height={CAMERA_SIZE}
@@ -120,6 +109,7 @@ export const MyComponent = () => {
         // onClick={() =>
         //   fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
         // }
+        className='mainStage'
       >
         <Container
           x={CAMERA_SIZE / 2}
@@ -176,6 +166,12 @@ export const MyComponent = () => {
         )}
       </Stage>
       {/* <div className=''>{health > 0 ? health : 'dead'}</div> */}
-    </>
+      <section className='sidePanel'>
+        {/* <img src='/Panel05.png' alt='sidepanel' className='' /> */}
+        <h2>STATS</h2>
+        <p>Score: {score}</p>
+      </section>
+      {/* <div className='sidePanel'></div> */}
+    </main>
   );
 };
