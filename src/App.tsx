@@ -64,6 +64,8 @@ export const MyComponent = () => {
   const spawnEnemy = useEnemyStore((state) => state.spawnEnemy);
   const health = usePlayerStore((state) => state.health);
   const score = usePlayerStore((state) => state.score);
+  const moveSpeed = usePlayerStore((state) => state.moveSpeed);
+  const attackSpeed = usePlayerStore((state) => state.attackSpeed);
   const playerCooldown = useRef(0);
   const playerFireRate = useRef(100);
   const [mousePos, setMousePos] = useState({});
@@ -169,7 +171,10 @@ export const MyComponent = () => {
       <section className='sidePanel'>
         {/* <img src='/Panel05.png' alt='sidepanel' className='' /> */}
         <h2>STATS</h2>
+        <p>Health : {health}</p>
         <p>Score: {score}</p>
+        <p>MoveSpeed: {moveSpeed}</p>
+        <p>AttackSpeed: {attackSpeed}</p>
       </section>
       {/* <div className='sidePanel'></div> */}
     </main>

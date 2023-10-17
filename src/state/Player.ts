@@ -6,6 +6,7 @@ export const usePlayerStore = create((set) => ({
   health: 100,
   moveSpeed: 1,
   score: 0,
+  attackSpeed: 1,
   movePlayer: ({ moveX, moveY }) =>
     set((state) => ({
       playerX: state.playerX + moveX * state.moveSpeed,
