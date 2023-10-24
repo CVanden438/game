@@ -64,7 +64,7 @@ const RadialMovement = ({ enemyX, enemyY, x, y, id, speed, moveEnemy }) => {
       enemyX,
       enemyY,
       moveEnemy,
-      angleDegrees: 0.2 * speed,
+      angleDegrees: 0.4 * speed,
     });
   }
 };

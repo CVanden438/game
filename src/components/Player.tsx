@@ -2,58 +2,39 @@ import { Sprite, useTick } from '@pixi/react';
 import { usePlayerStore } from '../state/Player';
 import { keys } from '../App';
 import { useState } from 'react';
-import { MAP_SIZE } from '../Constants';
+import { CAMERA_SIZE, MAP_SIZE } from '../Constants';
+import { PlayerMovement } from '../controllers/movement/PlayerMovement';
 
-const Player = ({ x, setX, y, setY }) => {
+const calcAngle = ({ mousePos, setAngle }) => {
+  const directionX = mousePos.x - CAMERA_SIZE / 2;
+  const directionY = mousePos.y - CAMERA_SIZE / 2;
+  let angle;
+  if (directionX > 0) {
+    angle = Math.atan(directionY / directionX);
+  } else {
+    angle = Math.atan(directionY / directionX) + Math.PI;
+  }
+  // console.log(mousePos);
+  setAngle(angle);
+};
+
+const Player = ({ x, setX, y, setY, mousePos }) => {
   const movePlayer = usePlayerStore((state) => state.movePlayer);
   const [angle, setAngle] = useState(0);
   useTick(() => {
-    if (keys['w'] && keys['a']) {
-      if (y > 0 && x > 0) {
-        movePlayer({ moveX: -3 / Math.SQRT2, moveY: -3 / Math.SQRT2 });
-        setAngle(315);
-      }
-    } else if (keys['w'] && keys['d']) {
-      if (y > 0 && x < MAP_SIZE) {
-        movePlayer({ moveX: 3 / Math.SQRT2, moveY: -3 / Math.SQRT2 });
-        setAngle(45);
-      }
-    } else if (keys['s'] && keys['a']) {
-      if (y < MAP_SIZE && x > 0) {
-        movePlayer({ moveX: -3 / Math.SQRT2, moveY: 3 / Math.SQRT2 });
-        setAngle(225);
-      }
-    } else if (keys['s'] && keys['d']) {
-      if (y < MAP_SIZE && x < MAP_SIZE) {
-        movePlayer({ moveX: 3 / Math.SQRT2, moveY: 3 / Math.SQRT2 });
-        setAngle(135);
-      }
-    } else if (keys['w']) {
-      if (y > 0) {
-        movePlayer({ moveX: 0, moveY: -3 });
-        setAngle(0);
-      }
-    } else if (keys['a']) {
-      if (x > 0) {
-        movePlayer({ moveX: -3, moveY: 0 });
-        setAngle(270);
-      }
-    } else if (keys['s']) {
-      if (y < MAP_SIZE) {
-        movePlayer({ moveX: 0, moveY: 3 });
-        setAngle(180);
-      }
-    } else if (keys['d']) {
-      if (x < MAP_SIZE) {
-        movePlayer({ moveX: 3, moveY: 0 });
-        setAngle(90);
-      }
-    }
+    PlayerMovement({
+      x,
+      y,
+      movePlayer,
+      setAngle,
+    });
+    calcAngle({ mousePos, setAngle });
+    // console.log(angle);
   });
 
   return (
     <Sprite
-      angle={angle}
+      rotation={angle + Math.PI / 2}
       image='Ship1.png'
       x={x}
       y={y}

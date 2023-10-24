@@ -126,7 +126,7 @@ export const MyComponent = () => {
             height={MAP_SIZE}
             width={MAP_SIZE}
           />
-          <Player x={playerX} y={playerY} />
+          <Player x={playerX} y={playerY} mousePos={mousePos} />
           <EnemyMapper enemyList={enemyList} />
           {/* {bullets &&
             bullets.map((bullet, index) => {
