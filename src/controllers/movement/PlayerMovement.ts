@@ -1,7 +1,7 @@
-import { keys } from '../../App';
+import { keys } from '../../Keys';
 import { MAP_SIZE } from '../../Constants';
 
-export const PlayerMovement = ({ x, y, movePlayer, setAngle }) => {
+export const playerMovement = ({ x, y, movePlayer, setAngle }) => {
   if (keys['w'] && keys['a']) {
     if (y > 0 && x > 0) {
       movePlayer({ moveX: -3 / Math.SQRT2, moveY: -3 / Math.SQRT2 });

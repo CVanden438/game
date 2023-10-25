@@ -1,12 +1,10 @@
 import { Graphics, Sprite, useTick } from '@pixi/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useEnemyStore } from '../state/Enemy';
-import { useEnemyBulletStore } from '../state/EnemyBullet';
 import { usePlayerStore } from '../state/Player';
 import { BULLET_SPEED } from '../Constants';
 import EnemyBullet from '../components/EnemyBullet';
 import { defaultMovement } from '../controllers/movement/defaultMovement';
-import { radialMovement } from '../controllers/movement/radialMovement';
 import { defaultAttack } from '../controllers/attacks/defaultAttack';
 
 const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
@@ -16,7 +14,7 @@ const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
   setEnemyBullets(newBullets);
 };
 
-export const SmallGuy = ({ enemyX, enemyY, x, y, id, data }) => {
+export const GreenGuy = ({ enemyX, enemyY, x, y, id, data }) => {
   const {
     health,
     height,
@@ -45,7 +43,7 @@ export const SmallGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     [health]
   );
   useTick(() => {
-    radialMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    defaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
     if (cooldown.current === fireRate) {
       defaultAttack({
@@ -62,7 +60,7 @@ export const SmallGuy = ({ enemyX, enemyY, x, y, id, data }) => {
   return (
     <>
       <Sprite
-        image={'Ship13.png'}
+        image={'Ship8.png'}
         x={enemyX}
         y={enemyY}
         height={height}

@@ -1,50 +1,11 @@
 import { Graphics, Sprite, useTick } from '@pixi/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useEnemyStore } from '../state/Enemy';
-import { useEnemyBulletStore } from '../state/EnemyBullet';
 import { usePlayerStore } from '../state/Player';
 import { BULLET_SPEED } from '../Constants';
 import EnemyBullet from '../components/EnemyBullet';
-import DefaultMovement from '../controllers/movement/DefaultMovement';
-import RadialMovement from '../controllers/movement/RadialMovement';
-
-const calcEnemyTraj = ({ playerX, playerY, enemyX, enemyY }) => {
-  // Calculate the direction vector
-  const directionX = playerX - enemyX;
-  const directionY = playerY - enemyY;
-
-  // Normalize the direction vector
-  const magnitude = Math.sqrt(
-    directionX * directionX + directionY * directionY
-  );
-  const normalizedDirectionX = directionX / magnitude;
-  const normalizedDirectionY = directionY / magnitude;
-
-  // Calculate the initial velocity components with constant speed
-  const velocityX = BULLET_SPEED * normalizedDirectionX;
-  const velocityY = BULLET_SPEED * normalizedDirectionY;
-  return { velocityX, velocityY };
-};
-
-const fireBullet = ({
-  playerX,
-  playerY,
-  enemyX,
-  enemyY,
-  enemyBullets,
-  setEnemyBullets,
-}) => {
-  setEnemyBullets([
-    ...enemyBullets,
-    {
-      x: enemyX,
-      y: enemyY,
-      id: crypto.randomUUID(),
-      velocityX: calcEnemyTraj({ playerX, playerY, enemyX, enemyY }).velocityX,
-      velocityY: calcEnemyTraj({ playerX, playerY, enemyX, enemyY }).velocityY,
-    },
-  ]);
-};
+import { defaultMovement } from '../controllers/movement/defaultMovement';
+import { defaultAttack } from '../controllers/attacks/defaultAttack';
 
 const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
   const newBullets = enemyBullets.filter((bullet) => {
@@ -53,10 +14,9 @@ const removeBullet = ({ id, enemyBullets, setEnemyBullets }) => {
   setEnemyBullets(newBullets);
 };
 
-const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
+export const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
   const {
     health,
-    name,
     height,
     width,
     speed,
@@ -83,10 +43,10 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     [health]
   );
   useTick(() => {
-    DefaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
+    defaultMovement({ moveEnemy, enemyX, enemyY, id, speed, x, y });
     cooldown.current = cooldown.current + 1;
     if (cooldown.current === fireRate) {
-      fireBullet({
+      defaultAttack({
         playerX,
         playerY,
         enemyX,
@@ -100,7 +60,7 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
   return (
     <>
       <Sprite
-        image={name === 'bigGuy' ? 'Ship18.png' : 'Ship13.png'}
+        image={'Ship18.png'}
         x={enemyX}
         y={enemyY}
         height={height}
@@ -129,5 +89,3 @@ const BigGuy = ({ enemyX, enemyY, x, y, id, data }) => {
     </>
   );
 };
-
-export default BigGuy;

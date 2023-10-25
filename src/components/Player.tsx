@@ -3,7 +3,7 @@ import { usePlayerStore } from '../state/Player';
 import { keys } from '../App';
 import { useState } from 'react';
 import { CAMERA_SIZE, MAP_SIZE } from '../Constants';
-import { PlayerMovement } from '../controllers/movement/PlayerMovement';
+import { playerMovement } from '../controllers/movement/playerMovement';
 
 const calcAngle = ({ mousePos, setAngle }) => {
   const directionX = mousePos.x - CAMERA_SIZE / 2;
@@ -18,11 +18,11 @@ const calcAngle = ({ mousePos, setAngle }) => {
   setAngle(angle);
 };
 
-const Player = ({ x, setX, y, setY, mousePos }) => {
+const Player = ({ x, y, mousePos }) => {
   const movePlayer = usePlayerStore((state) => state.movePlayer);
   const [angle, setAngle] = useState(0);
   useTick(() => {
-    PlayerMovement({
+    playerMovement({
       x,
       y,
       movePlayer,

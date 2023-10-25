@@ -1,6 +1,6 @@
 import { Sprite, useTick } from '@pixi/react';
 import { useState } from 'react';
-import { CAMERA_SIZE, BULLET_SPEED, MAP_SIZE } from '../Constants';
+import { MAP_SIZE } from '../Constants';
 import { useEnemyStore } from '../state/Enemy';
 
 const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
@@ -14,24 +14,31 @@ const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
     ) {
       collision = true;
       damageEnemy(i.id);
-      // killEnemy();
     }
   }
   return collision;
 };
 
+type BulletProps = {
+  x: number;
+  y: number;
+  id: string;
+  velocityX: number;
+  velocityY: number;
+  setBullets: () => void;
+  removeBullet: () => void;
+};
+
 const Bullet = ({
   x,
   y,
-  mousePos,
   removeBullet,
   bullets,
   id,
-  index,
   velocityX,
   velocityY,
   setBullets,
-}) => {
+}: BulletProps) => {
   const [bulletX, setBulletX] = useState(x);
   const [bulletY, setBulletY] = useState(y);
   const [angle, setAngle] = useState(0);
@@ -53,8 +60,6 @@ const Bullet = ({
     }
     setBulletX(bulletX + velocityX);
     setBulletY(bulletY + velocityY);
-    // const newArray = bullets.splice(index, 1);
-    // setBullets([...bullets]);
     if (velocityX > 0) {
       setAngle(Math.atan(velocityY / velocityX));
     } else {

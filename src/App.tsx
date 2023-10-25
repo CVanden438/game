@@ -1,60 +1,20 @@
 import { Stage, Container, TilingSprite, Sprite } from '@pixi/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePlayerStore } from './state/Player.ts';
 import { useEnemyStore } from './state/Enemy.ts';
 import Player from './components/Player.tsx';
-import { BULLET_SPEED, CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
+import { CAMERA_SIZE, MAP_SIZE } from './Constants.ts';
 import EnemyMapper from './enemies/EnemyMapper.tsx';
 import BulletMapper from './components/BulletMapper.tsx';
+import { keys } from './Keys.ts';
 import './App.css';
 
-export const keys = { w: false, a: false, s: false, d: false };
-
-const handleKeyDown = (e) => {
+const handleKeyDown = (e: KeyboardEvent) => {
   keys[e.key] = true;
 };
 
-const handleKeyUp = (e) => {
+const handleKeyUp = (e: KeyboardEvent) => {
   keys[e.key] = false;
-};
-
-const calcTraj = (mousePos) => {
-  // Calculate the direction vector
-  const directionX = mousePos.x - CAMERA_SIZE / 2;
-  const directionY = mousePos.y - CAMERA_SIZE / 2;
-
-  // Normalize the direction vector
-  const magnitude = Math.sqrt(
-    directionX * directionX + directionY * directionY
-  );
-  const normalizedDirectionX = directionX / magnitude;
-  const normalizedDirectionY = directionY / magnitude;
-
-  // Calculate the initial velocity components with constant speed
-  const velocityX = BULLET_SPEED * normalizedDirectionX;
-  const velocityY = BULLET_SPEED * normalizedDirectionY;
-  return { velocityX, velocityY };
-};
-
-const fireBullet = ({ playerX, playerY, mousePos, bullets, setBullets }) => {
-  setBullets([
-    ...bullets,
-    {
-      x: playerX,
-      y: playerY,
-      id: crypto.randomUUID(),
-      mousePos,
-      velocityX: calcTraj(mousePos).velocityX,
-      velocityY: calcTraj(mousePos).velocityY,
-    },
-  ]);
-};
-
-const removeBullet = ({ id, bullets, setBullets }) => {
-  const newBullets = bullets.filter((bullet) => {
-    return bullet.id !== id;
-  });
-  setBullets(newBullets);
 };
 
 export const MyComponent = () => {
@@ -66,11 +26,11 @@ export const MyComponent = () => {
   const score = usePlayerStore((state) => state.score);
   const moveSpeed = usePlayerStore((state) => state.moveSpeed);
   const attackSpeed = usePlayerStore((state) => state.attackSpeed);
-  const playerCooldown = useRef(0);
-  const playerFireRate = useRef(100);
+  const addMoveSpeed = usePlayerStore((state) => state.addMoveSpeed);
+  const addAttackSpeed = usePlayerStore((state) => state.addAttackSpeed);
+
   const [mousePos, setMousePos] = useState({});
-  const [bullets, setBullets] = useState([]);
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
   };
   useEffect(() => {
@@ -87,19 +47,6 @@ export const MyComponent = () => {
     const spawn = setInterval(spawnEnemy, 1000);
     return () => clearInterval(spawn);
   }, []);
-  // useTick(() => {
-  //   playerCooldown.current = playerCooldown.current + 1;
-  //   if (playerCooldown.current === playerFireRate.current) {
-  //     fireBullet({
-  //       playerX,
-  //       playerY,
-  //       mousePos,
-  //       bullets,
-  //       setBullets,
-  //     });
-  //     playerCooldown.current = 0;
-  //   }
-  // });
   return (
     <main className='mainContainer'>
       <Stage
@@ -108,9 +55,6 @@ export const MyComponent = () => {
         options={{
           background: 'black',
         }}
-        // onClick={() =>
-        //   fireBullet({ playerX, playerY, mousePos, bullets, setBullets })
-        // }
         className='mainStage'
       >
         <Container
@@ -125,27 +69,10 @@ export const MyComponent = () => {
             image={'/space.jpg'}
             height={MAP_SIZE}
             width={MAP_SIZE}
+            tilePosition={{ x: 0, y: 0 }}
           />
           <Player x={playerX} y={playerY} mousePos={mousePos} />
           <EnemyMapper enemyList={enemyList} />
-          {/* {bullets &&
-            bullets.map((bullet, index) => {
-              return (
-                <Bullet
-                  x={bullet.x}
-                  y={bullet.y}
-                  mousePos={bullet.mousePos}
-                  removeBullet={removeBullet}
-                  id={bullet.id}
-                  bullets={bullets}
-                  index={index}
-                  key={bullet.id}
-                  setBullets={setBullets}
-                  velocityX={bullet.velocityX}
-                  velocityY={bullet.velocityY}
-                />
-              );
-            })} */}
           <BulletMapper mousePos={mousePos} />
         </Container>
         <Sprite
@@ -167,16 +94,15 @@ export const MyComponent = () => {
           />
         )}
       </Stage>
-      {/* <div className=''>{health > 0 ? health : 'dead'}</div> */}
       <section className='sidePanel'>
-        {/* <img src='/Panel05.png' alt='sidepanel' className='' /> */}
         <h2>STATS</h2>
         <p>Health : {health}</p>
         <p>Score: {score}</p>
         <p>MoveSpeed: {moveSpeed}</p>
         <p>AttackSpeed: {attackSpeed}</p>
+        <button onClick={addMoveSpeed}>Increase MoveSpeed</button>
+        <button onClick={addAttackSpeed}>Increase AttackSpeed</button>
       </section>
-      {/* <div className='sidePanel'></div> */}
     </main>
   );
 };

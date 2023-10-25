@@ -1,4 +1,4 @@
-import DefaultMovement from './DefaultMovement';
+import { defaultMovement } from './defaultMovement';
 
 let angle = 0; // Initialize the angle
 
@@ -53,9 +53,17 @@ function calculateMovement({
   return moveEnemy({ id, moveX: deltaX, moveY: deltaY });
 }
 
-const RadialMovement = ({ enemyX, enemyY, x, y, id, speed, moveEnemy }) => {
+export const radialMovement = ({
+  enemyX,
+  enemyY,
+  x,
+  y,
+  id,
+  speed,
+  moveEnemy,
+}) => {
   if (Math.sqrt((enemyX - x) ** 2 + (enemyY - y) ** 2) > 200) {
-    return DefaultMovement({ enemyX, enemyY, x, y, id, speed, moveEnemy });
+    return defaultMovement({ enemyX, enemyY, x, y, id, speed, moveEnemy });
   } else {
     return rotatePoint({
       id,
@@ -68,5 +76,3 @@ const RadialMovement = ({ enemyX, enemyY, x, y, id, speed, moveEnemy }) => {
     });
   }
 };
-
-export default RadialMovement;

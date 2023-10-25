@@ -45,11 +45,11 @@ const BulletMapper = ({ mousePos }) => {
   const [bullets, setBullets] = useState([]);
   const playerX = usePlayerStore((state) => state.playerX);
   const playerY = usePlayerStore((state) => state.playerY);
-  const fireRate = 20;
+  const fireRate = usePlayerStore((state) => state.attackSpeed);
   const playerCooldown = useRef(0);
   useTick(() => {
     playerCooldown.current = playerCooldown.current + 1;
-    if (playerCooldown.current === fireRate) {
+    if (playerCooldown.current >= fireRate) {
       fireBullet({ playerX, playerY, mousePos, bullets, setBullets });
       playerCooldown.current = 0;
     }

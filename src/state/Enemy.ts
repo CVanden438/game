@@ -1,20 +1,45 @@
 import { create } from 'zustand';
-import enemyData from '../EnemyData';
+import { enemyData } from '../EnemyData';
 import { MAP_SIZE } from '../Constants';
 import { usePlayerStore } from './Player';
+import { EnemyData } from '../EnemyData';
 
-export const useEnemyStore = create((set, get) => ({
-  enemyList: [
-    // { x: 100, y: 100, id: 1020, data: enemyData.bigGuy },
-    // { x: 110, y: 110, id: 2222, data: enemyData.smallGuy },
-  ],
+type EnemyTypes = Array<'bigGuy' | 'smallGuy' | 'greenGuy'>;
+
+const randomEnemy = () => {
+  const strings: EnemyTypes = ['bigGuy', 'smallGuy', 'greenGuy'];
+  const randomIndex = Math.floor(Math.random() * strings.length);
+  return strings[randomIndex];
+};
+
+export type EnemyState = {
+  enemyList: Array<{
+    x: number;
+    y: number;
+    id: string;
+    data: EnemyData['bigGuy'];
+  }>;
+  spawnEnemy: () => void;
+  damageEnemy: (id: string) => void;
+  moveEnemy: ({
+    id,
+    moveX,
+    moveY,
+  }: {
+    id: string;
+    moveX: number;
+    moveY: number;
+  }) => void;
+  killEnemy: ({ id, score }: { id: string; score: number }) => void;
+};
+
+export const useEnemyStore = create<EnemyState>((set, get) => ({
+  enemyList: [],
   spawnEnemy: () => {
     const x = Math.random() * MAP_SIZE;
     const y = Math.random() * MAP_SIZE;
     const id = crypto.randomUUID();
-    let type = 'bigGuy';
-    const rand = Math.random();
-    rand < 0.5 ? (type = 'bigGuy') : (type = 'smallGuy');
+    const type = randomEnemy();
     set((state) => ({
       enemyList:
         state.enemyList.length < 10
@@ -28,34 +53,6 @@ export const useEnemyStore = create((set, get) => ({
               },
             ]
           : [...state.enemyList],
-    }));
-  },
-  moveEnemyLeft: (id) => {
-    set((state) => ({
-      enemyList: state.enemyList.map((enemy) =>
-        enemy.id === id ? { ...enemy, x: enemy.x - 1 } : enemy
-      ),
-    }));
-  },
-  moveEnemyRight: (id) => {
-    set((state) => ({
-      enemyList: state.enemyList.map((enemy) =>
-        enemy.id === id ? { ...enemy, x: enemy.x + 1 } : enemy
-      ),
-    }));
-  },
-  moveEnemyUp: (id) => {
-    set((state) => ({
-      enemyList: state.enemyList.map((enemy) =>
-        enemy.id === id ? { ...enemy, y: enemy.y - 1 } : enemy
-      ),
-    }));
-  },
-  moveEnemyDown: (id) => {
-    set((state) => ({
-      enemyList: state.enemyList.map((enemy) =>
-        enemy.id === id ? { ...enemy, y: enemy.y + 1 } : enemy
-      ),
     }));
   },
   damageEnemy: (id) => {
