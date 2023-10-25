@@ -1,3 +1,4 @@
+import { Structures } from '../Structures';
 import { EnemyState } from '../state/Enemy';
 type CalcCollision = {
   bulletX: number;
@@ -6,7 +7,7 @@ type CalcCollision = {
   damageEnemy: (id: string) => void;
 };
 
-export const calcCollision = ({
+export const calcBulletCollision = ({
   enemyList,
   bulletX,
   bulletY,
@@ -22,6 +23,16 @@ export const calcCollision = ({
     ) {
       collision = true;
       damageEnemy(i.id);
+    }
+  }
+  for (const i of Structures) {
+    if (
+      bulletX > i.x - i.width / 2 &&
+      bulletX < i.x + i.width / 2 &&
+      bulletY > i.y - i.height / 2 &&
+      bulletY < i.y + i.height / 2
+    ) {
+      collision = true;
     }
   }
   return collision;

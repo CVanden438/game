@@ -14,7 +14,6 @@ const calcAngle = ({ mousePos, setAngle }) => {
   } else {
     angle = Math.atan(directionY / directionX) + Math.PI;
   }
-  // console.log(mousePos);
   setAngle(angle);
 };
 
@@ -29,7 +28,6 @@ const Player = ({ x, y, mousePos }) => {
       setAngle,
     });
     calcAngle({ mousePos, setAngle });
-    // console.log(angle);
   });
 
   return (

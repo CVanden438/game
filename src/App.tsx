@@ -8,6 +8,7 @@ import EnemyMapper from './enemies/EnemyMapper.tsx';
 import BulletMapper from './components/BulletMapper.tsx';
 import { keys } from './Keys.ts';
 import './App.css';
+import { Structures } from './Structures.ts';
 
 const handleKeyDown = (e: KeyboardEvent) => {
   keys[e.key] = true;
@@ -28,7 +29,6 @@ export const MyComponent = () => {
   const attackSpeed = usePlayerStore((state) => state.attackSpeed);
   const addMoveSpeed = usePlayerStore((state) => state.addMoveSpeed);
   const addAttackSpeed = usePlayerStore((state) => state.addAttackSpeed);
-
   const [mousePos, setMousePos] = useState({});
   const handleMouseMove = (e: MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
@@ -72,6 +72,18 @@ export const MyComponent = () => {
             tilePosition={{ x: 0, y: 0 }}
           />
           <Player x={playerX} y={playerY} mousePos={mousePos} />
+          {Structures.map((s) => {
+            return (
+              <Sprite
+                x={s.x}
+                y={s.y}
+                height={s.height}
+                width={s.width}
+                image={'/ast2.png'}
+                anchor={0.5}
+              />
+            );
+          })}
           <EnemyMapper enemyList={enemyList} />
           <BulletMapper mousePos={mousePos} />
         </Container>

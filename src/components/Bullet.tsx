@@ -2,6 +2,7 @@ import { Sprite, useTick } from '@pixi/react';
 import { useState } from 'react';
 import { MAP_SIZE } from '../Constants';
 import { useEnemyStore } from '../state/Enemy';
+import { calcBulletCollision } from '../functions/calcBulletCollision';
 
 const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
   let collision = false;
@@ -46,7 +47,7 @@ const Bullet = ({
   const damageEnemy = useEnemyStore((state) => state.damageEnemy);
   const killEnemy = useEnemyStore((state) => state.killEnemy);
   const moveBullet = () => {
-    if (calcCollision(enemyList, bulletX, bulletY, damageEnemy, killEnemy)) {
+    if (calcBulletCollision({ enemyList, bulletX, bulletY, damageEnemy })) {
       removeBullet({ id, bullets, setBullets });
       return;
     }
