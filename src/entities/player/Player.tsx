@@ -1,9 +1,9 @@
 import { Sprite, useTick } from '@pixi/react';
-import { usePlayerStore } from '../state/Player';
-import { keys } from '../App';
+import { usePlayerStore } from '../../state/Player';
+import { keys } from '../../App';
 import { useState } from 'react';
-import { CAMERA_SIZE, MAP_SIZE } from '../Constants';
-import { playerMovement } from '../controllers/movement/playerMovement';
+import { CAMERA_SIZE, MAP_SIZE } from '../../Constants';
+import { playerMovement } from '../../controllers/movement/playerMovement';
 
 const calcAngle = ({ mousePos, setAngle }) => {
   const directionX = mousePos.x - CAMERA_SIZE / 2;

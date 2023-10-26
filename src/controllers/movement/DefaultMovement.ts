@@ -18,7 +18,7 @@ export const defaultMovement = ({
   const moveY = unitY * speed;
   if (distance > 200) {
     return moveEnemy({ id, moveX, moveY });
-  } else if (distance < 200) {
+  } else if (distance < 180) {
     return moveEnemy({ id, moveX: -moveX, moveY: -moveY });
   }
 };

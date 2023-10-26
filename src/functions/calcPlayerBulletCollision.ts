@@ -7,7 +7,7 @@ type CalcCollision = {
   damageEnemy: (id: string) => void;
 };
 
-export const calcBulletCollision = ({
+export const calcPlayerBulletCollision = ({
   enemyList,
   bulletX,
   bulletY,

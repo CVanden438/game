@@ -1,21 +1,9 @@
-import { BULLET_SPEED } from '../Constants';
+import { BULLET_SPEED, CAMERA_SIZE } from '../Constants';
 
-type CalcEnemyBulletTraj = {
-  playerX: number;
-  playerY: number;
-  enemyX: number;
-  enemyY: number;
-};
-
-export const calcEnemyBulletTraj = ({
-  playerX,
-  playerY,
-  enemyX,
-  enemyY,
-}: CalcEnemyBulletTraj) => {
+export const calcPlayerBulletTraj = ({ mousePos }) => {
   // Calculate the direction vector
-  const directionX = playerX - enemyX;
-  const directionY = playerY - enemyY;
+  const directionX = mousePos.x - CAMERA_SIZE / 2;
+  const directionY = mousePos.y - CAMERA_SIZE / 2;
 
   // Normalize the direction vector
   const magnitude = Math.sqrt(

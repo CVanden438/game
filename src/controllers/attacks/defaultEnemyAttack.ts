@@ -1,4 +1,4 @@
-import { calcEnemyTraj } from '../../functions/calcEnemyBulletTraj';
+import { calcEnemyBulletTraj } from '../../functions/calcEnemyBulletTraj';
 
 type DefaultAttack = {
   playerX: number;
@@ -9,7 +9,7 @@ type DefaultAttack = {
   setEnemyBullets: () => void;
 };
 
-export const defaultAttack = ({
+export const defaultEnemyAttack = ({
   playerX,
   playerY,
   enemyX,
@@ -23,8 +23,10 @@ export const defaultAttack = ({
       x: enemyX,
       y: enemyY,
       id: crypto.randomUUID(),
-      velocityX: calcEnemyTraj({ playerX, playerY, enemyX, enemyY }).velocityX,
-      velocityY: calcEnemyTraj({ playerX, playerY, enemyX, enemyY }).velocityY,
+      velocityX: calcEnemyBulletTraj({ playerX, playerY, enemyX, enemyY })
+        .velocityX,
+      velocityY: calcEnemyBulletTraj({ playerX, playerY, enemyX, enemyY })
+        .velocityY,
     },
   ]);
 };

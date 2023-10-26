@@ -1,5 +1,5 @@
-import { EnemyNames } from '../EnemyData';
-import { usePlayerStore } from '../state/Player';
+import { EnemyNames } from '../../EnemyData';
+import { usePlayerStore } from '../../state/Player';
 import { BigGuy } from './BigGuy';
 import { GreenGuy } from './GreenGuy';
 import { SmallGuy } from './SmallGuy';

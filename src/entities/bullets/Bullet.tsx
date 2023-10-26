@@ -1,8 +1,9 @@
 import { Sprite, useTick } from '@pixi/react';
 import { useState } from 'react';
-import { MAP_SIZE } from '../Constants';
-import { useEnemyStore } from '../state/Enemy';
-import { calcBulletCollision } from '../functions/calcBulletCollision';
+import { MAP_SIZE } from '../../Constants';
+import { useEnemyStore } from '../../state/Enemy';
+import { calcBulletCollision } from '../../functions/calcPlayerBulletCollision';
+import { movePlayerBullet } from '../../controllers/bullets/movePlayerBullet';
 
 const calcCollision = (enemyList, bulletX, bulletY, damageEnemy, killEnemy) => {
   let collision = false;
@@ -33,7 +34,6 @@ type BulletProps = {
 const Bullet = ({
   x,
   y,
-  removeBullet,
   bullets,
   id,
   velocityX,
@@ -45,30 +45,21 @@ const Bullet = ({
   const [angle, setAngle] = useState(0);
   const enemyList = useEnemyStore((state) => state.enemyList);
   const damageEnemy = useEnemyStore((state) => state.damageEnemy);
-  const killEnemy = useEnemyStore((state) => state.killEnemy);
-  const moveBullet = () => {
-    if (calcBulletCollision({ enemyList, bulletX, bulletY, damageEnemy })) {
-      removeBullet({ id, bullets, setBullets });
-      return;
-    }
-    if (bulletX < 0 || bulletX > MAP_SIZE) {
-      removeBullet({ id, bullets, setBullets });
-      return;
-    }
-    if (bulletY < 0 || bulletY > MAP_SIZE) {
-      removeBullet({ id, bullets, setBullets });
-      return;
-    }
-    setBulletX(bulletX + velocityX);
-    setBulletY(bulletY + velocityY);
-    if (velocityX > 0) {
-      setAngle(Math.atan(velocityY / velocityX));
-    } else {
-      setAngle(Math.atan(velocityY / velocityX) + Math.PI);
-    }
-  };
   useTick(() => {
-    moveBullet();
+    movePlayerBullet({
+      bullets,
+      bulletX,
+      bulletY,
+      damageEnemy,
+      enemyList,
+      id,
+      setAngle,
+      setBullets,
+      setBulletX,
+      setBulletY,
+      velocityX,
+      velocityY,
+    });
   });
   return (
     <Sprite
